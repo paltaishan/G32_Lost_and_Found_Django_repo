@@ -1,0 +1,490 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lost & Found | Home{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+<style>
+
+    /* Hero Section */
+    .searchbar{
+      background-color: #ddd;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+
+        .category-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .category-bar a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .category-bar a.active {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .item-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination span, .pagination a {
+            margin: 0 5px;
+        }   
+
+  body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+.troov-stats {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+  color: #1a3e36;
+}
+
+.troov-stats h1 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+}
+
+.stat-box {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.stat-box img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 15px;
+}
+
+.stat-box h2 {
+  font-size: 28px;
+  color: #1a3e36;
+  margin: 10px 0 5px;
+}
+
+.stat-box p {
+  font-size: 16px;
+  color: #555;
+}
+
+.center-box .stars {
+  font-size: 28px;
+  color: #f7c100;
+}
+
+.center-box h3 {
+  font-size: 22px;
+  margin-top: 10px;
+  color: #1a3e36;
+}
+
+
+.custom-badge {
+  font-size: 1rem;         /* Bigger */
+  font-weight: 600;        /* Bolder */
+  padding: 0.5em 1em;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+.custom-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+}
+
+.custom-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+  .custom-card {
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.custom-card-img img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.custom-card-body {
+  padding: 20px;
+}
+
+.card-meta {
+  font-size: 1rem;
+  color: #222; /* Darker text */
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.card-meta strong {
+  color: #000; /* Even darker for labels */
+  font-weight: 700;
+}
+
+
+
+.custom-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.custom-card-text {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.view-details-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+/* Carousel container styling */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 15px;
+    animation: scroll 20s linear infinite;
+  }
+
+  .carousel-item {
+    flex: 0 0 auto;
+    width: 250px;  /* Fixed width for each card */
+    transition: transform 0.3s ease;
+  }
+
+  /* Animation for infinite horizontal scrolling */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Optional: Add hover effect on cards */
+  .card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text" data-aos="fade-right">
+      <h1>When recovering your items becomes child's play!</h1>
+      <p class="subtext">Lost or found something?<br>Let us help you</p>
+      <div class="buttons" data-aos="zoom-in" data-aos-delay="300">
+        <a href="{% url 'add_item' %}">
+          <button class="btn primary">I HAVE LOST</button>
+        </a>
+          <a href="{% url 'add_item' %}">
+
+            <button class="btn secondary">I HAVE FOUND</button>
+          </a>
+      </div>
+      <a href="#" class="video-link" data-aos="fade-up" data-aos-delay="500">▶ See the process in video</a>
+    </div>
+    <div class="hero-img" data-aos="fade-left">
+      <img src="https://troov.com/images/back-to-school/bg_spring-homepage.png" alt="Hero Illustration"/>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="how-it-works" data-aos="fade-up">
+    <h2>How LostLink Help You</h2>
+    <div class="steps">
+      <div class="step" data-aos="flip-left">
+        <div class="icon">📝</div>
+        <h3>Report a lost or found item</h3>
+        <p>Fill the declaration with details (location, type, description) to help identify it quickly.</p>
+      </div>
+      <div class="step" data-aos="flip-up">
+        <div class="icon">🛡️</div>
+        <h3>Prove ownership of the item</h3>
+        <p>Answer security questions so our partners can validate that the item is yours.</p>
+      </div>
+      <div class="step" data-aos="flip-right">
+        <div class="icon">🤝</div>
+        <h3>Get it back!</h3>
+        <p>Once authenticated, receive pick-up or delivery info. Use your reference number.</p>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<!-- Recently Reported Items Section -->
+
+<section class="categories container mx-auto px-4 py-8">
+  <h1 class="text-center mb-4 fw-bold mt-3">Recently Reported Items</h1>
+
+  <!-- Search Form -->
+  <form method="get" class="mb-4 d-flex justify-content-center">
+      <input type="text" name="search" placeholder="Search..." value="{{ request.GET.search }}" class="searchbar" >
+      <button type="submit" class="btn">Search</button>
+  </form>
+
+  <!-- Category Filter Bar -->
+  <div class="category-bar">
+      <a href="{% url 'dashboard' %}?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}" 
+         class="{% if not request.GET.category %}active{% endif %}">
+          All
+      </a>
+      {% for key, label in category_choices %}
+          <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}category={{ key }}"
+             class="{% if request.GET.category == key %}active{% endif %}">
+              {{ label }}
+          </a>
+      {% endfor %}
+  </div>
+
+ 
+    </div>
+  </section>
+  
+  <script>
+    const scrollContainer = document.getElementById('categoryScroll');
+    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+    const scrollRightBtn = document.getElementById('scrollRightBtn');
+  
+    scrollLeftBtn.addEventListener('click', () => {
+      scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+  
+    scrollRightBtn.addEventListener('click', () => {
+      scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+  </script>
+  
+  
+  
+  
+
+
+
+
+
+
+<section class="cards-section py-5" data-aos="fade-up">
+  <div class="container">
+    <!-- <h2 class="text-center text-primary mb-4 fw-bold">Recently Reported Items</h2> -->
+
+    <div class="row">
+      {% for item in items %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden position-relative custom-hover" data-aos="fade-up">
+            
+            <!-- Image -->
+            {% if item.image %}
+              <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+              <img src="{% static 'default.jpg' %}" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+            {% endif %}
+    
+            <div class="card-body d-flex flex-column p-4">
+              <!-- Title -->
+              <h5 class="card-title fw-bold text-dark mb-2">{{ item.title }}</h5>
+    
+              <!-- Info -->
+              <p class="card-meta">
+                <span><strong>Category:</strong> {{ item.get_category_display }}</span><br>
+                <span><strong>Location:</strong> {{ item.location }}</span><br>
+                <span><strong>Date:</strong> {{ item.date_reported }}</span><br>
+                <span><strong>Status:</strong>
+                  {% if item.status == 'found' %}
+                    <span class="badge custom-badge bg-success">Found</span>
+                  {% elif item.status == 'lost' %}
+                    <span class="badge custom-badge bg-danger">Lost</span>
+                  {% else %}
+                    <span class="badge custom-badge bg-secondary">Unknown</span>
+                  {% endif %}
+                </span>
+              </p>
+              
+    
+              <!-- Description -->
+              <p class="card-text text-secondary small mb-4">{{ item.description|truncatechars:100 }}</p>
+    
+              <!-- Buttons -->
+              <div class="mt-auto">
+                <a href="{% url 'item_detail' item.item_id %}" class="btn btn-sm btn-primary w-100 mb-2 shadow-sm">🔍 View Details</a>
+                {% if item.status == 'found' %}
+                  <a href="{% url 'claim_item' item.item_id %}" class="btn btn-sm btn-outline-success w-100 shadow-sm">📝 Claim</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-center">No items found.</p>
+      {% endfor %}
+    </div>
+    
+    
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+      <div class="d-flex justify-content-center mt-4">
+        <nav>
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+              </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+              <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+              </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+
+
+
+<hr>
+
+
+
+<section class="troov-stats mb-5" data-aos="fade-up" data-aos-duration="1000">
+  <h1 class="text-3xl font-bold text-center mb-8">LOSTLINK IN NUMBERS</h1>
+  <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+    
+    <div class="stat-box p-4 bg-white rounded-lg shadow-md" data-aos="zoom-in" data-aos-delay="100">
+      <img src="https://img.icons8.com/color/96/box--v1.png" alt="Items" class="mx-auto mb-2">
+      <h2 class="text-2xl font-bold">50K+</h2>
+      <p>Items every month</p>
+    </div>
+
+    <div class="stat-box p-4 bg-white rounded-lg shadow-md" data-aos="zoom-in" data-aos-delay="200">
+      <div class="stars text-xl mb-2">⭐⭐⭐⭐⭐</div>
+      <h2 class="text-2xl font-bold">20K+</h2>
+      <p>User reviews to</p>
+      <h3 class="text-lg font-semibold">5/5</h3>
+    </div>
+
+    <div class="stat-box p-4 bg-white rounded-lg shadow-md" data-aos="zoom-in" data-aos-delay="300">
+      <img src="https://img.icons8.com/color/96/conference-call.png" alt="Partners" class="mx-auto mb-2">
+      <h2 class="text-2xl font-bold">1000+</h2>
+      <p>Partner places</p>
+    </div>
+
+    <div class="stat-box p-4 bg-white rounded-lg shadow-md" data-aos="zoom-in" data-aos-delay="400">
+      <img src="https://img.icons8.com/color/96/city.png" alt="Cities" class="mx-auto mb-2">
+      <h2 class="text-2xl font-bold">200+</h2>
+      <p>Cities in action</p>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const track = document.querySelector('.carousel-track');
+  track.addEventListener('mouseover', () => {
+    track.style.animationPlayState = 'paused';  // Pause the animation
+  });
+  
+  track.addEventListener('mouseout', () => {
+    track.style.animationPlayState = 'running';  // Resume the animation
+  });
+  </script>
+  
+{% endblock %}

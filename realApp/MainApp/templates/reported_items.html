@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}Reported Items{% endblock %}
+
+{% block content %}
+<style>
+  .items-section {
+    padding: 60px 20px;
+    background: linear-gradient(to bottom right, #f8f9fa, #dbe8ff);
+    animation: fadeInPage 1.2s ease-in-out;
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .item-card {
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    transform: scale(0.95) translateY(30px);
+    animation: popIn 0.6s forwards ease-out;
+  }
+
+  .item-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .item-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f0f0f0;
+  }
+
+  .item-body {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .item-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-meta {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.4rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 50px;
+    color: white;
+    background: #17a2b8;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .item-card:hover .status-badge {
+    transform: scale(1.1);
+  }
+
+  .status-lost { background: #e74c3c; }
+  .status-found { background: #2ecc71; }
+  .status-returned { background: #f1c40f; color: black; }
+
+  /* Animations */
+  @keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes popIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.95) translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .item-img {
+      height: 160px;
+    }
+  }
+</style>
+
+<div class="items-section">
+  <h2 class="text-center mb-5" style="animation: fadeInPage 1s ease-out;">✨ All Reported Items ✨</h2>
+  <div class="items-grid">
+    {% for item in items %}
+      {% with delay=forloop.counter0|add:"0" %}
+        <div class="item-card" style="animation-delay: {{ delay|floatformat:0 }}s;">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" class="item-img" alt="{{ item.title }}">
+          {% else %}
+            <div class="item-img d-flex align-items-center justify-content-center text-muted">No Image</div>
+          {% endif %}
+          <div class="item-body">
+            <div class="item-title">{{ item.title }}</div>
+            <div class="item-meta"><strong>Category:</strong> {{ item.get_category_display }}</div>
+            <div class="item-meta"><strong>Location:</strong> {{ item.location }}</div>
+            <div class="item-meta"><strong>Date:</strong> {{ item.date_reported }}</div>
+            <div class="status-badge status-{{ item.status }}">{{ item.get_status_display }}</div>
+          </div>
+        </div>
+      {% endwith %}
+    {% empty %}
+      <p class="text-center">No items have been reported yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

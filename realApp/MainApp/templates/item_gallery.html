@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-center mb-4">📦 Found Items Gallery</h2>
+
+    <!-- Search and Filter Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="🔍 Search by title or location" value="{{ request.GET.search }}">
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for value, label in category_choices %}
+                    <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                <option value="">Sort by</option>
+                <option value="title" {% if request.GET.sort == 'title' %}selected{% endif %}>Title (A-Z)</option>
+                <option value="-date_reported" {% if request.GET.sort == '-date_reported' %}selected{% endif %}>Newest First</option>
+                <option value="date_reported" {% if request.GET.sort == 'date_reported' %}selected{% endif %}>Oldest First</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Apply</button>
+        </div>
+    </form>
+
+    <!-- Items Grid -->
+    <div class="row">
+      {% for item in items %}
+          <div class="col-md-4 mb-4">
+              <div class="card h-100 shadow-sm">
+                  <div style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                      {% if item.image %}
+                          <img src="{{ item.image.url }}" class="card-img-top img-fluid" alt="{{ item.title }}" style="object-fit: cover; height: 100%; width: 100%;">
+                      {% else %}
+                          <img src="{% static 'default-image.jpg' %}" class="card-img-top img-fluid" alt="No image" style="object-fit: cover; height: 100%; width: 100%;">
+                      {% endif %}
+                  </div>
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                          <h5 class="card-title mb-0">{{ item.title }}</h5>
+                          <span class="badge {% if item.status == 'found' %}bg-success{% else %}bg-danger{% endif %}">
+                              {{ item.status|capfirst }}
+                          </span>
+                      </div>
+                      <p class="card-text text-muted"><strong>Location:</strong> {{ item.location }}</p>
+                      <p class="card-text">{{ item.description|truncatechars:100 }}</p>
+                      <p class="card-text"><small class="text-muted">Reported on: {{ item.date_reported }}</small></p>
+                      <!-- <a class="nav-link" href="{% url 'update_claim_status'  %}">update status</a> -->
+                  </div>
+              </div>
+          </div>
+      {% empty %}
+          <p class="text-center">No items found matching your criteria.</p>
+      {% endfor %}
+  </div>
+  
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}
+                        {% if request.GET.category %}category={{ request.GET.category }}&{% endif %}
+                        {% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}
+                        page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}
+                        {% if request.GET.category %}category={{ request.GET.category }}&{% endif %}
+                        {% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}
+                        page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">📦 Your Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Order #{{ order.id }}</strong>
+                    <span class="badge bg-secondary">Status: {{ order.status }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Ordered at:</strong> {{ order.ordered_at|date:"F j, Y, g:i a" }}</p>
+                    <ul class="list-group list-group-flush">
+                        {% for product in order.products.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ product.product_name }}
+                                <span class="badge bg-light text-muted">{{ product.get_category_display }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">
+            You haven't placed any orders yet.
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Shop Now</a>
+    {% endif %}
+</div>
+{% endblock %}

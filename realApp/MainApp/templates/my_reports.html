@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Reports{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Background Gradient */
+  body {
+    background: linear-gradient(to right, #a8c0ff, #3f2b96);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Floating 3D Background */
+  .background-3d {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(circle at 10% 30%, #b3d9ff 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, #f9c2d1 0%, transparent 60%),
+      radial-gradient(circle at 50% 50%, #ffeb3b 0%, transparent 50%);
+    z-index: -1;
+    opacity: 0.3;
+    animation: floatBG 16s ease-in-out infinite alternate;
+  }
+
+  @keyframes floatBG {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-30px, 30px); }
+  }
+
+  /* Title Styling */
+  h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  h2::after {
+    content: "";
+    width: 90px;
+    height: 4px;
+    background: #3498db;
+    display: block;
+    margin: 12px auto 0;
+    border-radius: 4px;
+  }
+
+  /* Card Layout */
+  .card {
+    border-radius: 1.8rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #ffffff;
+    background-color: #ffffff;
+  }
+
+  .card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img-top {
+    height: 230px;
+    object-fit: cover;
+    border-top-left-radius: 1.8rem;
+    border-top-right-radius: 1.8rem;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.2rem;
+    transition: color 0.3s ease;
+  }
+
+  .card-title:hover {
+    color: #3498db;
+  }
+
+  .card-meta {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-text {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Badge Styles */
+  .custom-badge {
+    font-size: 0.9rem;
+    padding: 0.45em 0.7em;
+    border-radius: 1.5rem;
+    font-weight: 600;
+  }
+
+  .badge-lost { background: #e74c3c; color: white; }
+  .badge-found { background: #2ecc71; color: white; }
+  .badge-unknown { background: #95a5a6; color: white; }
+
+  /* Floating Action Button */
+  .fab-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #3498db, #5dade2);
+    color: #fff;
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-size: 1.2rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+
+  .fab-btn:hover {
+    background: #21618c;
+    transform: scale(1.1);
+  }
+
+  /* Alert Styles */
+  .alert-info {
+    background-color: #d1f2eb;
+    color: #16a085;
+    font-weight: 500;
+    border: none;
+    border-radius: 1rem;
+    margin-top: 2rem;
+  }
+
+  /* Responsive Card Layout */
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 1.3rem;
+    }
+
+    .fab-btn {
+      font-size: 1.1rem;
+      padding: 14px 28px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 3D Background Animation -->
+<div class="background-3d"></div>
+
+<!-- Reported Items Container -->
+<div class="container mt-5 mb-5">
+  <h2>My Reported Items</h2>
+
+  {% if items %}
+    <div class="row">
+      {% for item in items %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm position-relative" data-aos="zoom-in">
+            <!-- Image -->
+            {% if item.image %}
+              <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+            {% else %}
+              <img src="{% static 'default.jpg' %}" class="card-img-top" alt="No image available">
+            {% endif %}
+
+            <!-- Card Body -->
+            <div class="card-body d-flex flex-column p-4">
+              <h5 class="card-title fw-bold text-dark mb-2">{{ item.title }}</h5>
+
+              <p class="card-meta mb-2">
+                {% if item.get_category_display %}
+                  <strong>Category:</strong> {{ item.get_category_display }}<br>
+                {% endif %}
+                <strong>Location:</strong> {{ item.location }}<br>
+                <strong>Date:</strong> {{ item.date_reported|date:"M d, Y" }}<br>
+                <strong>Status:</strong>
+                {% if item.status == 'found' %}
+                  <span class="badge custom-badge badge-found">Found</span>
+                {% elif item.status == 'lost' %}
+                  <span class="badge custom-badge badge-lost">Lost</span>
+                {% else %}
+                  <span class="badge custom-badge badge-unknown">Unknown</span>
+                {% endif %}
+              </p>
+
+              <p class="card-text text-secondary mb-4">{{ item.description|truncatechars:100 }}</p>
+
+              <div class="mt-auto">
+                <a href="{% url 'item_detail' item.item_id %}" class="btn btn-sm btn-primary w-100 mb-2">View Details</a>
+                {% if item.status == 'found' %}
+                  <a href="{% url 'claim_item' item.item_id %}" class="btn btn-sm btn-outline-success w-100">Claim</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mt-4" role="alert">
+      🚨 You haven’t reported any items yet. Click the button below to get started!
+    </div>
+  {% endif %}
+</div>
+
+<!-- Floating Action Button -->
+<a href="{% url 'add_item' %}" class="fab-btn">
+  <i class="fas fa-plus me-2"></i> New Report
+</a>
+
+<!-- Font Awesome for Icon -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}
+    

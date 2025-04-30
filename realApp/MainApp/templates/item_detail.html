@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Item Details{% endblock %}
+
+{% block content %}
+<style>
+  .glass-card {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: transform 0.3s ease;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .item-image {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    object-fit: cover;
+    max-height: 350px;
+  }
+
+  .btn-claim {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    font-weight: bold;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-claim:hover {
+    background: linear-gradient(135deg, #00cec9, #00b894);
+    box-shadow: 0 0 15px rgba(0, 206, 201, 0.5);
+    transform: scale(1.05);
+  }
+
+  .details-label {
+    font-weight: 600;
+    color: #2d3436;
+  }
+
+  .details-value {
+    color: #636e72;
+  }
+</style>
+
+<div class="container py-5 d-flex justify-content-center">
+  <div class="glass-card col-md-8 p-0">
+    {% if item.image %}
+      <img src="{{ item.image.url }}" class="img-fluid item-image w-100" alt="{{ item.title }}">
+    {% endif %}
+
+    <div class="p-4">
+      <h2 class="text-center fw-bold mb-4 text-primary">{{ item.title }}</h2>
+
+      <div class="mb-3">
+        <span class="details-label">Status:</span>
+        <p class="details-value">{{ item.status }}</p>
+      </div>
+
+      <div class="mb-3">
+        <span class="details-label">Description:</span>
+        <p class="details-value">{{ item.description }}</p>
+      </div>
+
+      <div class="mb-3">
+        <span class="details-label">Category:</span>
+        <p class="details-value">{{ item.category }}</p>
+      </div>
+
+      <div class="mb-3">
+        <span class="details-label">Location:</span>
+        <p class="details-value">{{ item.location }}</p>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="{% url 'claim_item' item.item_id %}" class="btn btn-claim">Claim This Item</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

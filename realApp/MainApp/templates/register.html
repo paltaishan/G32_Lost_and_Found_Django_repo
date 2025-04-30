@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- AOS CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+<style>
+  body {
+    background: linear-gradient(135deg, #dfe6e9, #b2bec3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .register-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .register-title {
+    font-weight: 800;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2d3436;
+    position: relative;
+  }
+
+  .register-title::after {
+    content: "";
+    width: 60px;
+    height: 4px;
+    background-color: #0984e3;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 0.7rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: #0984e3;
+    box-shadow: 0 0 0 0.2rem rgba(9, 132, 227, 0.25);
+  }
+
+  .btn-register {
+    border-radius: 0.7rem;
+    font-weight: 600;
+    padding: 0.85rem;
+    background: linear-gradient(to right, #0984e3, #74b9ff);
+    border: none;
+    color: #fff;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+  }
+
+  .btn-register:hover {
+    background: linear-gradient(to right, #007BFF, #4aaeff);
+    transform: scale(1.02);
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #636e72;
+  }
+
+  .login-link a {
+    color: #0984e3;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+    color: #007BFF;
+  }
+
+  .text-danger {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="register-container" data-aos="fade-up" data-aos-duration="1000">
+    <h2 class="register-title">Create an Account</h2>
+    <form method="POST" enctype="multipart/form-data" novalidate data-aos="zoom-in" data-aos-delay="300">
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default:'' }}" required>
+        {% for error in form.username.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="id_email" class="form-label">Email</label>
+        <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default:'' }}">
+        {% for error in form.email.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Password1 -->
+      <div class="mb-3">
+        <label for="id_password1" class="form-label">Password</label>
+        <input type="password" name="password1" id="id_password1" class="form-control" required>
+        {% for error in form.password1.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Password2 -->
+      <div class="mb-3">
+        <label for="id_password2" class="form-label">Confirm Password</label>
+        <input type="password" name="password2" id="id_password2" class="form-control" required>
+        {% for error in form.password2.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+
+      <!-- Profile Picture -->
+      <div class="mb-3">
+        <label for="id_profile_picture" class="form-label">Profile Picture</label>
+        {{ form.profile_picture }}
+        {% for error in form.profile_picture.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="mb-3">
+        <label for="id_date_of_birth" class="form-label">Date of Birth</label>
+        {{ form.date_of_birth }}
+        {% for error in form.date_of_birth.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-register w-100">Register</button>
+
+      <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+{% endblock %}

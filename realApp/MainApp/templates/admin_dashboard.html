@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4 text-primary fw-bold text-center">📋 All Claims</h2>
+  <div class="table-responsive shadow-sm rounded-4 mb-5">
+    <table class="table table-hover align-middle table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">📦 Item</th>
+          <th scope="col">🧍 Claimant</th>
+          <th scope="col">📌 Item Status</th>
+          <th scope="col">📌 Claim Status</th>
+          <th scope="col">⚙️ Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for claim in claims %}
+          <tr>
+            <td>{{ claim.item.title }}</td>
+            <td>{{ claim.claimant.username }}</td>
+            <td>
+              <span class="badge 
+                {% if claim.item.status|lower == 'lost' %}
+                  bg-danger text-light
+                {% elif claim.item.status|lower == 'found' %}
+                  bg-success text-dark
+                {% else %}
+                  bg-secondary text-light
+                {% endif %}
+              ">{{ claim.item.status|title }}</span>
+            </td>
+            <td><span class="badge bg-secondary">{{ claim.status }}</span></td>
+            <td>
+              <form method="POST" action="{% url 'update_claim_status' claim.id %}" class="d-flex align-items-center gap-2">
+                {% csrf_token %}
+                <select name="status" class="form-select form-select-sm">
+                  {% for key, label in claim.STATUS_CHOICES %}
+                    <option value="{{ key }}" {% if key == claim.status %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+                <button class="btn btn-sm btn-outline-primary">Update</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">No claims submitted.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="mb-4 text-success fw-bold text-center">📦 All Items</h2>
+  <div class="table-responsive shadow-sm rounded-4">
+    <table class="table table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">📄 Title</th>
+          <th scope="col">🔖 Status</th>
+          <th scope="col">📂 Category</th>
+          <th scope="col">📍 Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.title }}</td>
+            <td>
+              <span class="badge 
+                {% if item.status|lower == 'found' %}
+                  bg-success text-dark
+                {% elif item.status|lower == 'lost' %}
+                  bg-danger text-light
+                {% else %}
+                  bg-info text-dark
+                {% endif %}
+              ">{{ item.status|title }}</span>
+            </td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.location }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" class="text-center text-muted">No items available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
